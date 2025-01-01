@@ -1,0 +1,192 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matchalculator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/10.6.4/math.js" integrity="sha512-BbVEDjbqdN3Eow8+empLMrJlxXRj5nEitiCAK5A1pUr66+jLVejo3PmjIaucRnjlB0P9R3rBUs3g5jXc8ti+fQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="script.js" defer></script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        .calculator {
+            max-width: 700px;
+            margin: 100px auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .calculator input[type="button"] {
+            width: 100%;
+            height: 60px;
+            font-size: 1.5rem;
+        }
+        .calculator input[type="text"] {
+            width: 100%;
+            height: 60px;
+            font-size: 1.5rem;
+            text-align: right;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        @keyframes slideRightToLeft {
+            0% {
+                transform: translateX(100%);  
+            }
+            100% {
+                transform: translateX(-100%); 
+            }
+        }    
+        .slide-in p {
+            display: inline-block; 
+            animation: slideRightToLeft 10s linear infinite; 
+        }
+        .fade-in {
+            animation: fade-in 0.5s ease-in-out;
+        }
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        .hover-zoom:hover {
+            transform: scale(1.1);
+            transition: transform 0.2s ease-in-out;
+        }
+        .hover-rotate:hover {
+            transform: rotate(5deg);
+            transition: transform 0.2s ease-in-out;
+        }
+        .move-in {
+            animation: move-in 0.5s ease-in-out;
+        }
+        @keyframes move-in {
+            from {
+                transform: translateX(-100%);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+        .hover-underline-animation {
+            position: relative;
+            color: white;
+        }
+        .hover-underline-animation::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            transform: scaleX(0);
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: white;
+            transform-origin: bottom right;
+            transition: transform 0.25s ease-out;
+        }
+        .hover-underline-animation:hover::after {
+            transform: scaleX(1);
+            transform-origin: bottom left;
+        }
+    </style>
+</head>
+<body class="font-roboto bg-purple-200">
+    <header class="bg-gray-700 text-green p-4">
+    <div class="container mx-auto flex justify-between items-center">
+        <!-- Logo Section -->
+        <div class="flex items-center">
+            <img alt="MatchaLuv logo" class="h-12 w-12 mr-3" height="50" src="Mylogo.png" width="50"/>
+            <span class="text-2xl font-bold text-white">MatchaLuv</span>
+        </div>
+
+        <!-- Desktop Menu -->
+        <nav class="hidden md:flex space-x-8">
+            <ul class="flex space-x-8">
+                <li><a class="hover-underline-animation font-bold text-2xl text-white" href="index.html">Home</a></li>
+                <li><a class="hover-underline-animation font-bold text-2xl text-white" href="index1.html">Matchalculator</a></li>
+           
+            </ul>
+        </nav>
+
+        <!-- Mobile Menu Button -->
+        <button id="menu-toggle" class="lg:hidden p-2 text-white">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+        </button>
+    </div>
+</div>
+</header>
+
+<!-- Mobile Menu -->
+<div class="hidden bg-gray-800 text-white" id="mobile-menu">
+    <nav class="flex flex-col space-y-2 p-4">
+        <a class="hover-underline-animation font-bold text-2xl" href="index.html">Home</a>
+        <a class="hover-underline-animation font-bold text-2xl" href="index1.html">Matchalculator</a>
+    </nav>
+</div>
+</header>
+
+<!-- Script for toggling the mobile menu -->
+<script>
+document.getElementById('menu-toggle').addEventListener('click', function() {
+    const menu = document.getElementById('mobile-menu');
+    menu.classList.toggle('hidden'); // Toggles the menu visibility
+});
+</script>
+
+    <div class="calculator bg-gray-800 p-6 rounded-lg shadow-lg">
+        <h1 class="text-2xl font-bold text-center text-white mb-4">Matchalculator</h1>
+    
+        <form>
+            <input id="display" type="text" readonly class="mb-4">
+            <div class="grid grid-cols-4 gap-2">
+                <input type="button" value="1" onclick="appendToDisplay('1')" class="bg-purple-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
+                <input type="button" value="2" onclick="appendToDisplay('2')" class="bg-purple-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
+                <input type="button" value="3" onclick="appendToDisplay('3')" class="bg-purple-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
+                <input type="button" value="C" onclick="clearDisplay()" class="bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-600">
+                <input type="button" value="4" onclick="appendToDisplay('4')" class="bg-purple-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
+                <input type="button" value="5" onclick="appendToDisplay('5')" class="bg-purple-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
+                <input type="button" value="6" onclick="appendToDisplay('6')" class="bg-purple-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
+                <input type="button" value="⌫" onclick="backspace()" class="bg-yellow-500 text-white font-bold py-2 px-4 rounded hover:bg-yellow-600">
+                <input type="button" value="7" onclick="appendToDisplay('7')" class="bg-purple-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
+                <input type="button" value="8" onclick="appendToDisplay('8')" class="bg-purple-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
+                <input type="button" value="9" onclick="appendToDisplay('9')" class="bg-purple-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
+                <input type="button" value="=" onclick="calculate()" class="bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-600">
+                <input type="button" value="0" onclick="appendToDisplay('0')" class="bg-purple-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
+                <input type="button" value="." onclick="appendToDisplay('.')" class="bg-purple-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
+                <input type="button" value="+" onclick="appendToDisplay('+')" class="bg-purple-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
+                <input type="button" value="-" onclick="appendToDisplay('-')" class="bg-purple-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
+                <input type="button" value="*" onclick="appendToDisplay('*')" class="bg-purple-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
+                <input type="button" value="/" onclick="appendToDisplay('/')" class="bg-purple-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
+                <input type="button" value="%" onclick="appendToDisplay('%')" class="bg-purple-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
+                <input type="button" value="^" onclick="appendToDisplay('^')" class="bg-purple-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
+                <input type="button" value="(" onclick="appendToDisplay('(')" class="bg-purple-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
+                <input type="button" value=")" onclick="appendToDisplay(')')" class="bg-purple-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
+                <input type="button" value="cos(" onclick="appendToDisplay('cos(')" class="bg-purple-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
+                <input type="button" value="sin(" onclick="appendToDisplay('sin(')" class="bg-purple-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
+                <input type="button" value="tan(" onclick="appendToDisplay('tan(')" class="bg-purple-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
+                <input type="button" value="log(" onclick="appendToDisplay('log(')" class="bg-purple-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
+                <input type="button" value="sqrt(" onclick="appendToDisplay('sqrt(')" class="bg-purple-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
+                <input type="button" value="!" onclick="appendToDisplay('!')" class="bg-purple-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
+                <input type="button" value="E" onclick="appendToDisplay(Math.E)" class="bg-purple-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
+                <input type="button" value="π" onclick="appendToDisplay(Math.PI)" class="bg-purple-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
+                <input type="button" value="ln2" onclick="appendToDisplay(Math.LN2)" class="bg-purple-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
+                <input type="button" value="log10(" onclick="appendToDisplay('log10(')" class="bg-purple-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
+                <input type="button" value="l2e" onclick="appendToDisplay(Math.LOG2E)" class="bg-purple-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
+                <input type="button" value="l10e" onclick="appendToDisplay(Math.LOG10E)" class="bg-purple-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
+                <input type="button" value="exp(" onclick="appendToDisplay('exp(')" class="bg-purple-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
+            </div>
+        </form>
+    </div>
+</body>
+</html>
